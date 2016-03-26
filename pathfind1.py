@@ -3,42 +3,105 @@ from heapq import heappush, heappop # for priority queue
 import math
 import time
 import random
+import sys
 
-class node:
-    # current position
-    xPos = 0
-    yPos = 0
-    # total distance already travelled to reach the node
-    distance = 0
-    # priority = distance + remaining distance estimate
-    priority = 0 # smaller: higher priority
-    def __init__(self, xPos, yPos, distance, priority):
-        self.xPos = xPos
-        self.yPos = yPos
-        self.distance = distance
-        self.priority = priority
-    def __lt__(self, other): # for priority queue
-        return self.priority < other.priority
-    def updatePriority(self, xDest, yDest):
-        self.priority = self.distance + self.estimate(xDest, yDest) * 10 # A*
-    # give better priority to going straight instead of diagonally
-    def nextdistance(self, i): # i: direction
-        if i % 2 == 0:
-            self.distance += 10
-        else:
-            self.distance += 14
-    
-    # Estimation function for the remaining distance to the goal.
-    def estimate(self, xDest, yDest):
-        xd = xDest - self.xPos
-        yd = yDest - self.yPos
-        # Euclidian Distance
-        d = math.sqrt(xd ** 2 + yd ** 2)
-        # Manhattan distance
-        # d = abs(xd) + abs(yd)
+class Node:
+    def __init__(self,value,pX,pY):
+        self.value = value
+        self.pX = pX
+        self.pY = pY
+        self.parent = None
+        self.H = 0
+        self.G = 0
+    #if other is not obstacle, cost = 1
+    def move_cost(self,other):
+        cost = 0
+        if self.value == 'X':
+            cost = sys.maxsize
+        elif self.value == '.':
+            cost = 1
+        return cost
         
-        return(d)
+               
+def children(pX, pY,grid):
+    x = pX
+    y = pY
+    points = []
+    
+    for p in [(x-1, y-1),(x,y - 1),(x+1,y-1),(x-1,y),(x+1,y),(x-1,y + 1),(x,y+1),(x+1,y+1)]:
+        # print "Point",p
+        if not (p[0] < 0 or p[0] >= len(grid) or p[1] < 0 or p[1] >= len(grid[0])):
+            points.append(p)
+    links = [grid[d[0]][d[1]] for d in points]
+    links = [link for link in links if link.value =="."]
+    print [(link.point, link.value) for link in links]
+    return links
 
+def manhattan(node1,node2):
+    return abs(node1.pX - node2.pX) + abs(node1.pY-node2.pY)
+
+#moving cost G value
+def diagonal(node1, node2):
+    dx = abs(node1.x - node2.x)
+    dy = abs(node1.y - node2.y)
+    #D is moving cost of moving - and ; D2 is moving cost of / and \
+    D = 10
+    D2 = 14
+    return D * (dx + dy) + (D2 - 2 * D) * min(dx, dy)
+    
+    
+def aStar(start, goal, grid):
+    #The open and closed sets
+    openset = set()
+    closedset = set()
+    #Current point is the starting point
+    current = start
+    #Add the starting point to the open set
+    openset.add(current)
+    #While the open set is not empty
+    while openset:
+        #Find the item in the open set with the lowest G + H score
+        current = min(openset, key=lambda o:o.G + o.H)
+        #If it is the item we want, retrace the path and return it
+        if current == goal:
+            path = []
+            while current.parent:
+                path.append(current)
+                current = current.parent
+            path.append(current)
+            return path[::-1]
+        #Remove the item from the open set
+        openset.remove(current)
+        #Add it to the closed set
+        closedset.add(current)
+        #Loop through the node's children/siblings
+        for node in children(current,grid):
+            print node.point, node.value,current.move_cost(node)
+            #If it is already in the closed set, skip it
+            if node in closedset:
+                continue
+            #Otherwise if it is already in the open set
+            if node in openset:
+                #Check if we beat the G score 
+                new_g = current.G + current.move_cost(node)
+                if node.G > new_g:
+                    #If so, update the node to have a new parent
+                    node.G = new_g
+                    node.parent = current
+            else:
+                #If it isn't in the open set, calculate the G and H score for the node
+                node.G = current.G + current.move_cost(node)
+                node.H = manhattan(node, goal)
+                #Set the parent to our current item
+                node.parent = current
+                #Add it to the set
+                openset.add(node)
+    #Throw an exception if there is no path
+    raise ValueError('No Path Found')
+# def next_move(pacman,food,grid):
+    #Convert all the points to instances of Node
+         
+###################################################
 # A-star algorithm.
 # Path returned will be a string of digits of directions.
 def pathFind(the_map, directions, dx, dy, xStart, yStart, xFinish, yFinish):
@@ -124,12 +187,22 @@ def pathFind(the_map, directions, dx, dy, xStart, yStart, xFinish, yFinish):
                     pqi = 1 - pqi
                     heappush(pq[pqi], m0) # add the better node instead
     return '' # no route found
+
 #convert file into map
 def createMap(filename):
     f = open(filename,'r')
     li = [i.strip().split() for i in f.readlines()]
     return li
-
+#convert map to map of nodes
+def createGrid(map):
+    grid = []
+    for i in range(len(map)):
+        row = map[i]
+        for j in range(len(row)):
+            col = row[j]
+            node = Node(col, j, i)
+            grid.append([node.pX,node.pY,node.value])
+    return grid          
 #find position of an element
 def findPos(map,element):
     result = []
@@ -140,6 +213,7 @@ def findPos(map,element):
             if(col == element):
                 result = [element, j, i]
     return result
+
 # MAIN
 directions = 8 # number of possible directions to move on the map
 #manhattan distance
@@ -153,14 +227,24 @@ elif directions == 8:
 # map matrix
 
 the_map = createMap('map.txt')
+grid = createGrid(the_map)
+print grid
 #print the_map
 n = len(the_map[0]) # horizontal size
 m = len(the_map) # vertical size
 
 print 'Map Size (X,Y): ', n, m
 print 'Start: ', findPos(the_map, 'A')
-print 'Finish: ', findPos(the_map, 'B')
+print 'Finish1: ', findPos(the_map, 'B')
+print 'Finish2: ', findPos(the_map, 'C')
 t = time.time()
+xA = findPos(the_map, 'A')[1]
+yA = findPos(the_map, 'A')[2]
+xB = findPos(the_map, 'B')[1]
+yB = findPos(the_map, 'B')[2]
+#xC = findPos(the_map, 'C')[1]
+#yC = findPos(the_map, 'C')[2]
+
 route = pathFind(the_map, directions, dx, dy, xA, yA, xB, yB)
 print 'Time to generate the route (s): ', time.time() - t
 print 'Route:'
@@ -183,14 +267,14 @@ print 'Map:'
 for y in range(m):
     for x in range(n):
         xy = the_map[y][x]
-        if xy == 0:
+        if xy == '.':
             print '.', # space
-        elif xy == 1:
+        elif xy == 'X':
             print 'X', # obstacle
-        elif xy == 2:
+        elif xy == 'A':
             print 'S', # start
         elif xy == 3:
-            print 'R', # route
+            print '@', # route
         elif xy == 4:
             print 'F', # finish
     print

@@ -1,0 +1,11 @@
+
+public class Controller {
+
+	public static void main(String[] args) {
+		String filename = "/Users/sandra/Desktop/asgn3/map.txt";
+		MapConverter mc = new MapConverter(filename);
+		mc.printMatrix();
+
+	}
+
+}

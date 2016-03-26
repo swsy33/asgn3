@@ -1,0 +1,11 @@
+
+public class Controller {
+
+	public static void main(String[] args) {
+		String filename = "map.txt";
+		MapConverter mc = new MapConverter(filename);
+		mc.printMatrix();
+
+	}
+
+}

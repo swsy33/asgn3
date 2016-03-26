@@ -1,0 +1,27 @@
+
+public class MapConverter {
+	String[][] graph;
+	
+	public MapConverter(String filename)
+	{
+		
+	}
+	private readFile(filename) 
+	{
+		BufferedReader br = new BufferedReader(new FileReader(filename));
+		try {
+		    StringBuilder sb = new StringBuilder();
+		    String line = br.readLine();
+
+		    while (line != null) {
+		        sb.append(line);
+		        sb.append(System.lineSeparator());
+		        line = br.readLine();
+		    }
+		    String everything = sb.toString();
+		} finally {
+		    br.close();
+		}
+	}
+
+}

@@ -1,0 +1,2 @@
+State = [closed(mo), closed(ref), cl(mo), in(chicken,ref), in(pizza, ref), in(book, ref)].
+Goals = [not_hungry].
