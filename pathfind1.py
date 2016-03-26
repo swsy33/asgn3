@@ -124,7 +124,22 @@ def pathFind(the_map, directions, dx, dy, xStart, yStart, xFinish, yFinish):
                     pqi = 1 - pqi
                     heappush(pq[pqi], m0) # add the better node instead
     return '' # no route found
+#convert file into map
+def createMap(filename):
+    f = open(filename,'r')
+    li = [i.strip().split() for i in f.readlines()]
+    return li
 
+#find position of an element
+def findPos(map,element):
+    result = []
+    for i in range(len(map)):
+        row = map[i]
+        for j in range(len(row)):
+            col = row[j]
+            if(col == element):
+                result = [element, j, i]
+    return result
 # MAIN
 directions = 8 # number of possible directions to move on the map
 #manhattan distance
@@ -136,34 +151,15 @@ elif directions == 8:
     dy = [0, 1, 1, 1, 0, -1, -1, -1]
 
 # map matrix
-n = 32 # horizontal size
-m = 18 # vertical size
-the_map = []
-row = [0] * n
-for i in range(m):
-    the_map.append(list(row))
 
-# fillout the map matrix with a '+' pattern
-for x in range(n / 8, n * 7 / 8):
-    the_map[m / 2][x] = 1
-for y in range(m/8, m * 7 / 8):
-    the_map[y][n / 2] = 1
-
-# randomly select start and finish locations from a list
-#sf = []
-#sf.append((0, 0, n - 1, m - 1))
-#sf.append((0, m - 1, n - 1, 0))
-#sf.append((n / 2 - 1, m / 2 - 1, n / 2 + 1, m / 2 + 1))
-#sf.append((n / 2 - 1, m / 2 + 1, n / 2 + 1, m / 2 - 1))
-#sf.append((n / 2 - 1, 0, n / 2 + 1, m - 1))
-#sf.append((n / 2 + 1, m - 1, n / 2 - 1, 0))
-#sf.append((0, m / 2 - 1, n - 1, m / 2 + 1))
-#sf.append((n - 1, m / 2 + 1, 0, m / 2 - 1))
-#(xA, yA, xB, yB) = random.choice(sf)
+the_map = createMap('map.txt')
+#print the_map
+n = len(the_map[0]) # horizontal size
+m = len(the_map) # vertical size
 
 print 'Map Size (X,Y): ', n, m
-print 'Start: ', xA, yA
-print 'Finish: ', xB, yB
+print 'Start: ', findPos(the_map, 'A')
+print 'Finish: ', findPos(the_map, 'B')
 t = time.time()
 route = pathFind(the_map, directions, dx, dy, xA, yA, xB, yB)
 print 'Time to generate the route (s): ', time.time() - t
