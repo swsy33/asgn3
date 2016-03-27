@@ -314,15 +314,29 @@ public class AStar {
 		{
 			//Trace back the path 
 			Cell current = grid[endI][endJ];
-			count++;
+			Stack<Cell> st = new Stack<Cell>();
+			st.push(current);
+			//System.out.print(current);
 			while(current.parent!=null){
+				//System.out.print(" -> "+current.parent);
 				current = current.parent;
-				count++;
+				st.push(current);
 			} 
 			//graph with path
+			Stack<Cell> st1 = (Stack<Cell>) st.clone();
+			printPathGraph(mm, st1);
+			
+			String path="";
+			while(!st.isEmpty())
+			{
+				path = path + st.pop() + "->";
+			}
+			path = path.substring(0, path.length()-2);
+			System.out.print(path);
+			System.out.println();
 		}
 		else 
-			count = 0;
+			System.out.println("No possible path");
 
 
 		return count;

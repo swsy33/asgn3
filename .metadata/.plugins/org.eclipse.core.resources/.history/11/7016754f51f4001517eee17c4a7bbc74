@@ -10,10 +10,10 @@ public class Test {
 		AStar as = new AStar();
 		//A-B
 		as.test(1, mm, 16, 1, 16, 31);
-		System.out.println("length of the path A-B: " + as.getPathLength(mm, 16,1,16,31));
+		System.out.println("length of the path: " + as.getPathLength(mm, 16,1,16,31));
 		//A-C
 		as.test(2, mm,16,1, 0,24);   
-		System.out.println("length of the path A-C: " + as.getPathLength(mm, 16,1,0,24));
+
 	}
 
 }

@@ -320,9 +320,20 @@ public class AStar {
 				count++;
 			} 
 			//graph with path
+			Stack<Cell> st1 = (Stack<Cell>) st.clone();
+			printPathGraph(mm, st1);
+			
+			String path="";
+			while(!st.isEmpty())
+			{
+				path = path + st.pop() + "->";
+			}
+			path = path.substring(0, path.length()-2);
+			System.out.print(path);
+			System.out.println();
 		}
 		else 
-			count = 0;
+			System.out.println("No possible path");
 
 
 		return count;

@@ -263,68 +263,6 @@ public class AStar {
 	public int getPathLength(MarsMatrix mm, int si, int sj, int ei, int ej)
 	{
 		int count = 0;
-		initGrid(mm);
-		int x = mm.getHeightInMatrix();
-		int y = mm.getWidthInMatrix();
-		closed = new boolean[x][y];
-
-		open = new PriorityQueue<>((Object o1, Object o2) -> {
-			Cell c1 = (Cell)o1;
-			Cell c2 = (Cell)o2;
-
-			return c1.finalCost<c2.finalCost?-1:
-				c1.finalCost>c2.finalCost?1:0;
-		});
-		//Set start position
-		setStartCell(si, sj);  //Setting to 0,0 by default. Will be useful for the UI part
-		
-		//Set End Location
-		setEndCell(ei, ej); 
-		
-		for(int i=0;i<x;i++){
-			for(int j=0;j<y;j++){
-				grid[i][j] = new Cell(i, j);
-				grid[i][j].heuristicCost = Math.abs(i-endI)+Math.abs(j-endJ);
-			}
-		}
-		grid[si][sj].finalCost = 0;
-
-		/*
-             Set blocked cells. Simply set the cell values to null
-             for blocked cells.
-		 */
-		
-		for(int i = 0; i<mm.getHeightInMatrix(); i++)
-		{
-			for(int j = 0; j<mm.getWidthInMatrix();j++)
-			{
-				if(mm.getCell(i,j).equals("X"))
-				{
-					//System.out.println("here obstacle");
-					setBlocked(i,j);
-				}
-			}
-		}
-
-		
-		//find path
-		findPath(); 
-		
-		if(closed[endI][endJ])
-		{
-			//Trace back the path 
-			Cell current = grid[endI][endJ];
-			count++;
-			while(current.parent!=null){
-				current = current.parent;
-				count++;
-			} 
-			//graph with path
-		}
-		else 
-			count = 0;
-
-
 		return count;
 		
 	}

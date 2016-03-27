@@ -285,7 +285,9 @@ public class AStar {
 			for(int j=0;j<y;j++){
 				grid[i][j] = new Cell(i, j);
 				grid[i][j].heuristicCost = Math.abs(i-endI)+Math.abs(j-endJ);
+				//                  System.out.print(grid[i][j].heuristicCost+" ");
 			}
+			//              System.out.println();
 		}
 		grid[si][sj].finalCost = 0;
 
@@ -293,7 +295,9 @@ public class AStar {
              Set blocked cells. Simply set the cell values to null
              for blocked cells.
 		 */
-		
+		//           for(int i=0;i<blocked.length;++i){
+		//               setBlocked(blocked[i][0], blocked[i][1]);
+		//           }
 		for(int i = 0; i<mm.getHeightInMatrix(); i++)
 		{
 			for(int j = 0; j<mm.getWidthInMatrix();j++)
@@ -306,23 +310,59 @@ public class AStar {
 			}
 		}
 
+		//Display initial map
+		System.out.println("Grid: ");
+		for(int i=0;i<x;i++){
+			for(int j=0;j<y;j++){
+				if(i==si&&j==sj)System.out.print("SO  "); //Source
+				else if(i==ei && j==ej)System.out.print("DE  ");  //Destination
+				else if(grid[i][j]!=null)System.out.printf("%-3d ", 0);
+				else System.out.print("BL  "); 
+			}
+			System.out.println();
+		} 
+		System.out.println();
 		
 		//find path
 		findPath(); 
-		
+		System.out.println("\nScores for cells: ");
+		for(int i=0;i<x;++i){
+			for(int j=0;j<x;++j){
+				if(grid[i][j]!=null)System.out.printf("%-3d ", grid[i][j].finalCost);
+				else System.out.print("BL  ");
+			}
+			System.out.println();
+		}
+		System.out.println();
+
 		if(closed[endI][endJ])
 		{
 			//Trace back the path 
+			System.out.println("Path: ");
 			Cell current = grid[endI][endJ];
-			count++;
+			Stack<Cell> st = new Stack<Cell>();
+			st.push(current);
+			//System.out.print(current);
 			while(current.parent!=null){
+				//System.out.print(" -> "+current.parent);
 				current = current.parent;
-				count++;
+				st.push(current);
 			} 
 			//graph with path
+			Stack<Cell> st1 = (Stack<Cell>) st.clone();
+			printPathGraph(mm, st1);
+			
+			String path="";
+			while(!st.isEmpty())
+			{
+				path = path + st.pop() + "->";
+			}
+			path = path.substring(0, path.length()-2);
+			System.out.print(path);
+			System.out.println();
 		}
 		else 
-			count = 0;
+			System.out.println("No possible path");
 
 
 		return count;
