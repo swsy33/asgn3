@@ -1,0 +1,83 @@
+public class MarsMatrix{
+	
+	/** Indicator if a given tile has been visited during the search */
+	private boolean[][] visited;
+	int width = 0;
+	int height = 0;
+	private String[][] marsMatrix; 
+
+	public MarsMatrix(String[][] matrix) {
+		this.marsMatrix = matrix;
+		this.height = matrix.length;
+		this.width = matrix[0].length;
+		initVisited();
+		
+	}
+
+	public int[] findCell(String content)
+	{
+		int[] result = new int[2];
+		for(int i = 0; i < this.height; i++)
+		{
+			for( int j = 0; i< this.width; j++)
+			{
+				if (getCell(j,i) == content)
+				{
+					result[0] = j;
+					result[1] = i;
+				}
+			}
+		}
+		return result;
+	}
+	
+	private void initVisited()
+	{
+		visited = new boolean[height][width];
+		for(int i = 0; i < height; i++)
+		{
+			for(int j = 0; j < width; j++)
+			{
+				visited[i][j] = false;
+			}
+		}
+	}
+	
+	public void pathFinderVisited(int x, int y) {
+		visited[x][y] = true;
+	}
+	
+	public boolean visited(int x, int y) {
+		return visited[x][y];
+	}
+	
+	public String getCell(int x, int y)
+	{
+		System.out.println("marsmatrix 56" +this.marsMatrix[x][y]);
+		return this.marsMatrix[x][y];
+	}
+	
+	public double getCost(Mover mover, int sx, int sy, int tx, int ty )
+	{
+		return 1;
+	}
+	public boolean blocked(Mover mover, int x, int y) {
+		// if theres a unit at the location, then it's blocked
+		if (getCell(x,y) == "X") {
+			return true;
+		}
+		return false;
+	}
+
+	public int getHeightInMatrix() {
+		return this.width;
+	}
+
+	
+	public int getWidthInMatrix() {
+		return this.height;
+	}
+
+
+	
+}

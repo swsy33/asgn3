@@ -1,0 +1,93 @@
+public class MarsMatrix{
+
+	/** Indicator if a given tile has been visited during the search */
+	private boolean[][] visited;
+	int width = 0;
+	int height = 0;
+	private String[][] marsMatrix; 
+
+	public MarsMatrix(String[][] matrix) {
+
+		this.height = matrix.length;
+		this.width = matrix[0].length;
+		//System.out.println("this height " + this.height + " this wdith " + this.width);
+		this.marsMatrix = matrix.clone();
+		initVisited();
+
+	}
+
+	public int[] findCell(String content)
+	{
+		int[] result = new int[2];
+		System.out.println("sssss "+ getCell(1,16));
+		for(int y = 0; y < this.height; y++)
+		{
+			for( int x = 0; x< this.width; x++)
+			{
+				//System.out.println("! " + getCell(x,y));
+				if (getCell(x,y) == content)
+				{
+					System.out.println("! " + getCell(x,y));
+					result[0] = x;
+					result[1] = y;
+				}
+				
+			}
+		}
+		return result;
+	}
+
+	private void initVisited()
+	{
+		visited = new boolean[height][width];
+		for(int i = 0; i < height; i++)
+		{
+			for(int j = 0; j < width; j++)
+			{
+				visited[i][j] = false;
+			}
+		}
+	}
+
+	public void pathFinderVisited(int x, int y) {
+		visited[y][x] = true;
+	}
+
+	public boolean visited(int x, int y) {
+		return visited[y][x];
+	}
+
+	public String getCell(int x, int y)
+	{
+		//System.out.println("marsmatrix 56 " + y + "  " + x + this.marsMatrix[y][x]);
+		return this.marsMatrix[y][x];
+	}
+
+	public double getCost(Mover mover, int sx, int sy, int tx, int ty )
+	{
+		return 1;
+	}
+	
+	public boolean blocked(Mover mover, int x, int y) {
+		// if theres a unit at the location, then it's blocked
+		if (getCell(x,y) == "X") {
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+	public int getHeightInMatrix() {
+		return this.width;
+	}
+
+
+	public int getWidthInMatrix() {
+		return this.height;
+	}
+
+
+
+}

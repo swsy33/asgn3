@@ -1,0 +1,119 @@
+public class MarsMatrix{
+	
+	/** Indicator if a given tile has been visited during the search */
+	private boolean[][] visited;
+	int width = 0;
+	int height = 0;
+	private String[][] marsMatrix; 
+	public MarsMatrix(String[][] matrix) {
+		this.marsMatrix = matrix;
+		this.height = matrix.length;
+		this.width = matrix[0].length;
+		initVisited();
+		
+	}
+
+	private void initVisited()
+	{
+		visited = new boolean[height][width];
+		for(int i = 0; i < height; i++)
+		{
+			for(int j = 0; j < width; j++)
+			{
+				visited[i][j] = false;
+			}
+		}
+	}
+	
+	public void visit(int x, int y)
+	{
+		visited[x][y] = true;
+	}
+	
+	public boolean visited(int x, int y) {
+		return visited[x][y];
+	}
+	
+
+	
+	/**
+	 * Get the unit at a given location
+	 * 
+	 * @param x The x coordinate of the tile to check for a unit
+	 * @param y The y coordinate of the tile to check for a unit
+	 * @return The ID of the unit at the given location or 0 if there is no unit 
+	 */
+	public int getUnit(int x, int y) {
+		return units[x][y];
+	}
+	
+	/**
+	 * Set the unit at the given location
+	 * 
+	 * @param x The x coordinate of the location where the unit should be set
+	 * @param y The y coordinate of the location where the unit should be set
+	 * @param unit The ID of the unit to be placed on the map, or 0 to clear the unit at the
+	 * given location
+	 */
+	public void setUnit(int x, int y, int unit) {
+		units[x][y] = unit;
+	}
+	
+	/**
+	 * @see TileBasedMap#blocked(Mover, int, int)
+	 */
+	public boolean blocked(Mover mover, int x, int y) {
+		// if theres a unit at the location, then it's blocked
+		if (getUnit(x,y) != 0) {
+			return true;
+		}
+		
+		int unit = ((UnitMover) mover).getType();
+		
+		// planes can move anywhere
+		if (unit == PLANE) {
+			return false;
+		}
+		// tanks can only move across grass
+		if (unit == TANK) {
+			return terrain[x][y] != GRASS;
+		}
+		// boats can only move across water
+		if (unit == BOAT) {
+			return terrain[x][y] != WATER;
+		}
+		
+		// unknown unit so everything blocks
+		return true;
+	}
+
+	/**
+	 * @see TileBasedMap#getCost(Mover, int, int, int, int)
+	 */
+	public float getCost(Mover mover, int sx, int sy, int tx, int ty) {
+		return 1;
+	}
+
+	/**
+	 * @see TileBasedMap#getHeightInTiles()
+	 */
+	public int getHeightInTiles() {
+		return WIDTH;
+	}
+
+	/**
+	 * @see TileBasedMap#getWidthInTiles()
+	 */
+	public int getWidthInTiles() {
+		return HEIGHT;
+	}
+
+	/**
+	 * @see TileBasedMap#pathFinderVisited(int, int)
+	 */
+	public void pathFinderVisited(int x, int y) {
+		visited[x][y] = true;
+	}
+	
+	
+}

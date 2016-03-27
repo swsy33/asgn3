@@ -11,7 +11,7 @@ public class ManhattanHeuristic implements AStarHeuristic {
 		this.minimumCost = minimumCost;
 	}
 	
-	public float getCost(MarsMap map, Mover mover, int x, int y, int tx, int ty) {
+	public double getCost(MarsMatrix map, Mover mover, int x, int y, int tx, int ty) {
 		return minimumCost * (Math.abs(x-tx) + Math.abs(y-ty));
 	}
 

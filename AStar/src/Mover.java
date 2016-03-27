@@ -1,3 +1,3 @@
-public interface Mover {
+public class Mover {
 
 }
