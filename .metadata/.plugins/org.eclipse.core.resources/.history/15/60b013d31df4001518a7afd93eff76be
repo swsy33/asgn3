@@ -23,11 +23,11 @@ public class MarsMatrix{
 		{
 			for( int x = 0; x< this.width; x++)
 			{
-				if (getCell(y,x).equals(content))
+				if (getCell(x,y).equals(content))
 				{
-					System.out.println("! " + getCell(y,x));
-					result[0] = y;
-					result[1] = x;
+					System.out.println("! " + getCell(x,y));
+					result[0] = x;
+					result[1] = y;
 				}
 				
 			}
@@ -48,11 +48,11 @@ public class MarsMatrix{
 	}
 
 	public void pathFinderVisited(int x, int y) {
-		visited[x][y] = true;
+		visited[y][x] = true;
 	}
 
 	public boolean visited(int x, int y) {
-		return visited[x][y];
+		return visited[y][x];
 	}
 
 	public String getCell(int x, int y)

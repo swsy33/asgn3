@@ -219,14 +219,11 @@ public class AStar {
                 String path="";
                 while(!st.isEmpty())
                 {
-                	path = path + st.pop() + "->";
+                	System.out.print(st.pop() + "->");
                 }
-                path = path.substring(0, path.length()-2);
-                System.out.print(path);
+                
                 System.out.println();
-           }
-           else 
-        	   System.out.println("No possible path");
+           }else System.out.println("No possible path");
     }
      
     public static void main(String[] args) throws Exception{   

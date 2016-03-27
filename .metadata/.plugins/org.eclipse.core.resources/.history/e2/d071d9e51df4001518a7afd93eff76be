@@ -25,7 +25,7 @@ public class MarsMatrix{
 			{
 				if (getCell(y,x).equals(content))
 				{
-					System.out.println("! " + getCell(y,x));
+					System.out.println("! " + getCell(x,y));
 					result[0] = y;
 					result[1] = x;
 				}
