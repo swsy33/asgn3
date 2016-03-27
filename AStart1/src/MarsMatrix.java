@@ -1,7 +1,5 @@
 public class MarsMatrix{
 
-	/** Indicator if a given tile has been visited during the search */
-	private boolean[][] visited;
 	int width = 0;
 	int height = 0;
 	private String[][] marsMatrix; 
@@ -12,7 +10,6 @@ public class MarsMatrix{
 		this.width = matrix[0].length;
 		//System.out.println("this height " + this.height + " this wdith " + this.width);
 		this.marsMatrix = matrix.clone();
-		initVisited();
 
 	}
 
@@ -34,27 +31,18 @@ public class MarsMatrix{
 		}
 		return result;
 	}
-
-	private void initVisited()
+	
+	public void replaceCell(int x, int y, String replacewith)
 	{
-		visited = new boolean[height][width];
-		for(int i = 0; i < height; i++)
-		{
-			for(int j = 0; j < width; j++)
-			{
-				visited[i][j] = false;
-			}
-		}
+		this.marsMatrix[x][y] = replacewith;
 	}
-
-	public void pathFinderVisited(int x, int y) {
-		visited[x][y] = true;
+	
+	public MarsMatrix copy()
+	{
+		MarsMatrix nmm = new MarsMatrix(this.marsMatrix);
+		return nmm;
 	}
-
-	public boolean visited(int x, int y) {
-		return visited[x][y];
-	}
-
+	
 	public String getCell(int x, int y)
 	{
 		//System.out.println("marsmatrix 56 " + y + "  " + x + this.marsMatrix[y][x]);
@@ -78,25 +66,7 @@ public class MarsMatrix{
 			return false;
 		}
 	}
-	public int[][] obstacle()
-	{
-		int[][] ob = new int[getHeightInMatrix()][getWidthInMatrix()];
-		for(int i= 0; i< getHeightInMatrix(); i++)
-		{
-			for(int j = 0; j<getWidthInMatrix(); j++)
-			{
-				if(this.marsMatrix[i][j].equals("X"))
-				{
-					ob[i][j] = Integer.MAX_VALUE;
-				}
-				else
-				{
-					ob[i][j] = 0;
-				}
-			}
-		}
-		return ob;
-	}
+
 	public int getHeightInMatrix() {
 		return this.height;
 	}
