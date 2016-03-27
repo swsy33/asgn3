@@ -257,6 +257,8 @@ public class AStar {
 			System.out.print("\n");
 		}
 
+
 	}
 
+	
 }
