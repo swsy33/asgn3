@@ -18,6 +18,7 @@ public class Controller {
 		int[] start = mm.findCell(START);
 		//System.out.println("start0 " +start[0] + "start1 +" + start[1]);
 		int[] goal1 = mm.findCell(GOAL1);
+		System.out.println("goal0 " +goal1[0] + "goal11 +" + goal1[1]);
 		//int[] goal2 = mm.findCell(GOAL2);
 		
 		boolean admissible = true;

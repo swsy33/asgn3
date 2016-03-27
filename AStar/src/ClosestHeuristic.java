@@ -1,8 +1,6 @@
 public class ClosestHeuristic implements AStarHeuristic {
-	/**
-	 * @see AStarHeuristic#getCost(TileBasedMap, Mover, int, int, int, int)
-	 */
-	public double getCost(MarsMatrix map, Mover mover, int x, int y, int tx, int ty) {		
+	
+	public double getCost(Mover mover, int x, int y, int tx, int ty) {		
 		double dx = tx - x;
 		double dy = ty - y;
 		
