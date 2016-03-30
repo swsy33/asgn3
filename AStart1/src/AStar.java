@@ -6,6 +6,7 @@ public class AStar {
 
 	class Cell{  
 		int heuristicCost = 0; //Heuristic cost
+		int gCost = 0;	
 		int finalCost = 0; //G+H
 		int i, j;
 		Cell parent; 
@@ -48,11 +49,37 @@ public class AStar {
 		endI = i;
 		endJ = j; 
 	}
+	
 
+	public void setNonAdmissibleH(Cell current, int endi, int endj)
+	{
+		int result = 0;
+		int Dx = Math.abs(current.i - endi);
+		int Dy = Math.abs(current.j - endj);
+		result = Dx + Dy;
+		
+		current.heuristicCost = result;
+		
+	}
+	
+	public void setAdmissibleH(Cell current, int endi, int endj)
+	{
+		double result = 0;
+		int Dx = Math.abs(current.i - endi);
+		int Dy = Math.abs(current.j - endj);
+		result = Dx *Dx + Dy *Dy;
+		result = Math.sqrt(result /2);
+		
+		current.heuristicCost = (int)Math.round(result);
+	}
+	
 	void checkAndUpdateCost(Cell current, Cell t, int cost){
 		if(t == null || closed[t.i][t.j])return;
-		int t_final_cost = t.heuristicCost+cost;
-
+		
+		int t_g_cost = cost;
+		int t_final_cost = t.heuristicCost+t_g_cost;
+		//System.out.println("the H value is: " + t.heuristicCost);
+		
 		boolean inOpen = open.contains(t);
 		if(!inOpen || t_final_cost<t.finalCost){
 			t.finalCost = t_final_cost;
@@ -76,49 +103,58 @@ public class AStar {
 			if(current.equals(grid[endI][endJ])){
 				return; 
 			} 
-
+			
 			Cell t;  
 			if(current.i-1>=0){
 				t = grid[current.i-1][current.j];
-				checkAndUpdateCost(current, t, current.finalCost+V_H_COST); 
+				//checkAndUpdateCost(current, t, current.finalCost+V_H_COST); 
+				checkAndUpdateCost(current, t, current.gCost+V_H_COST); 
 
 				if(current.j-1>=0){                      
 					t = grid[current.i-1][current.j-1];
-					checkAndUpdateCost(current, t, current.finalCost+DIAGONAL_COST); 
+					//checkAndUpdateCost(current, t, current.finalCost+DIAGONAL_COST); 
+					checkAndUpdateCost(current, t, current.gCost+DIAGONAL_COST); 
 				}
 
 				if(current.j+1<grid[0].length){
 					t = grid[current.i-1][current.j+1];
-					checkAndUpdateCost(current, t, current.finalCost+DIAGONAL_COST); 
+					//checkAndUpdateCost(current, t, current.finalCost+DIAGONAL_COST); 
+					checkAndUpdateCost(current, t, current.gCost+DIAGONAL_COST); 
 				}
 			} 
 
 			if(current.j-1>=0){
 				t = grid[current.i][current.j-1];
-				checkAndUpdateCost(current, t, current.finalCost+V_H_COST); 
+				//checkAndUpdateCost(current, t, current.finalCost+V_H_COST); 
+				checkAndUpdateCost(current, t, current.gCost+V_H_COST); 
 			}
 
 			if(current.j+1<grid[0].length){
 				t = grid[current.i][current.j+1];
-				checkAndUpdateCost(current, t, current.finalCost+V_H_COST); 
+				//checkAndUpdateCost(current, t, current.finalCost+V_H_COST);
+				checkAndUpdateCost(current, t, current.gCost+V_H_COST); 
 			}
 
 			if(current.i+1<grid.length){
 				t = grid[current.i+1][current.j];
-				checkAndUpdateCost(current, t, current.finalCost+V_H_COST); 
+				//checkAndUpdateCost(current, t, current.finalCost+V_H_COST); 
+				checkAndUpdateCost(current, t, current.gCost+V_H_COST);
 
 				if(current.j-1>=0){
 					t = grid[current.i+1][current.j-1];
-					checkAndUpdateCost(current, t, current.finalCost+DIAGONAL_COST); 
+					//checkAndUpdateCost(current, t, current.finalCost+DIAGONAL_COST); 
+					checkAndUpdateCost(current, t, current.gCost+DIAGONAL_COST); 
+					
 				}
 
 				if(current.j+1<grid[0].length){
 					t = grid[current.i+1][current.j+1];
-					checkAndUpdateCost(current, t, current.finalCost+DIAGONAL_COST); 
+					//checkAndUpdateCost(current, t, current.finalCost+DIAGONAL_COST); 
+					checkAndUpdateCost(current, t, current.gCost+DIAGONAL_COST); 
 				}  
 			}
-		} 
-	}
+		}  }
+	
 
 	/*
     Params :
@@ -154,10 +190,17 @@ public class AStar {
 		for(int i=0;i<x;i++){
 			for(int j=0;j<y;j++){
 				grid[i][j] = new Cell(i, j);
-				grid[i][j].heuristicCost = Math.abs(i-endI)+Math.abs(j-endJ);
-				//                  System.out.print(grid[i][j].heuristicCost+" ");
+				//A-B admissible
+				//setAdmissibleH(current, endI, endJ);
+				//A-B inadmissible
+				//setNonAdmissibleH(current, endI, endJ);
+				//A-C admissible
+				//setAdmissibleH(grid[i][j], endI, endJ);
+				//A-C nonadmissible
+				setNonAdmissibleH(grid[i][j], endI, endJ);
+				  System.out.print(grid[i][j].heuristicCost+" ");
 			}
-			//              System.out.println();
+			             System.out.println();
 		}
 		grid[si][sj].finalCost = 0;
 
@@ -194,6 +237,7 @@ public class AStar {
 		System.out.println();
 		
 		//find path
+		
 		findPath(); 
 		System.out.println("\nScores for cells: ");
 		for(int i=0;i<x;++i){
@@ -314,7 +358,6 @@ public class AStar {
 		{
 			//Trace back the path 
 			Cell current = grid[endI][endJ];
-			count++;
 			while(current.parent!=null){
 				current = current.parent;
 				count++;

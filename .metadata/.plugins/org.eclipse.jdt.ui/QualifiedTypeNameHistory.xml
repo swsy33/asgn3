@@ -6,4 +6,6 @@
 <fullyQualifiedTypeName name="java.nio.file.Path"/>
 <fullyQualifiedTypeName name="AStarPathFinder"/>
 <fullyQualifiedTypeName name="MarsMatrix"/>
+<fullyQualifiedTypeName name="AStar.Cell"/>
+<fullyQualifiedTypeName name="java.lang.Math"/>
 </qualifiedTypeNameHistroy>
